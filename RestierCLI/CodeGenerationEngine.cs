@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RestierCLI
 {
-    class CodeGenerationEngine
+    public class CodeGenerationEngine
     {
+        public string ConnectionString { get; set; }
     }
 }

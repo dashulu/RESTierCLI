@@ -19,8 +19,6 @@
 
         public CodeGeneratorFactory(Project project)
         {
-            Debug.Assert(project != null, "project is null.");
-
             _project = project;
         }
 
@@ -61,6 +59,7 @@
         private CustomGenerator TryGetCustomizedTemplate(string path)
         {
             Debug.Assert(!string.IsNullOrEmpty(path), "path is null or empty.");
+            Debug.Assert(_project != null, "_project should not be null.");
 
             if (!_templatePathCache.ContainsKey(path))
             {

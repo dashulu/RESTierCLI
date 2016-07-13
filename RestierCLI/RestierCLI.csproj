@@ -53,6 +53,20 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="tools\EF6\src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj">
+      <Project>{0518e682-510d-48f8-bb14-7151c50a1850}</Project>
+      <Name>EntityDesignerVersioningFacade</Name>
+    </ProjectReference>
+    <ProjectReference Include="tools\EF6\src\EFTools\EntityDesign\EntityDesign.csproj">
+      <Project>{f904b4be-c7cf-4e4f-85b7-b006a2d1c561}</Project>
+      <Name>EntityDesign</Name>
+    </ProjectReference>
+    <ProjectReference Include="tools\EF6\src\EntityFramework\EntityFramework.csproj">
+      <Project>{e06d1c12-efe8-4413-a15c-ae01fc158f2f}</Project>
+      <Name>EntityFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

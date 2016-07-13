@@ -38,8 +38,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             try
             {
                 contextFileContents =
-                    _codeGeneratorFactory
-                        .GetContextGenerator(_language, isEmptyModel: model == null)
+                    new DefaultCSharpContextGenerator()
                         .Generate(model, codeNamespace, contextClassName, connectionStringName);
             }
             catch (Exception ex)
@@ -55,7 +54,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             {
                 foreach (var entitySet in model.ConceptualModel.Container.EntitySets)
                 {
-                    var entityTypeGenerator = _codeGeneratorFactory.GetEntityTypeGenerator(_language);
+                    var entityTypeGenerator = new DefaultCSharpEntityTypeGenerator();
                     var entityTypeFileName = entitySet.ElementType.Name + extension;
 
                     string entityTypeFileContents;

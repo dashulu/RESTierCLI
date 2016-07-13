@@ -5,6 +5,12 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestierCLI", "RestierCLI\RestierCLI.csproj", "{3C6B47BF-2DD9-45D2-AE63-729067D5BF7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework", "RestierCLI\tools\EF6\src\EntityFramework\EntityFramework.csproj", "{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDesign", "RestierCLI\tools\EF6\src\EFTools\EntityDesign\EntityDesign.csproj", "{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDesignerVersioningFacade", "RestierCLI\tools\EF6\src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj", "{0518E682-510D-48F8-BB14-7151C50A1850}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,30 @@ Global
 		{3C6B47BF-2DD9-45D2-AE63-729067D5BF7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C6B47BF-2DD9-45D2-AE63-729067D5BF7A}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
 		{3C6B47BF-2DD9-45D2-AE63-729067D5BF7A}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.DebugNet40|Any CPU.ActiveCfg = DebugNet40|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.DebugNet40|Any CPU.Build.0 = DebugNet40|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.ReleaseNet40|Any CPU.ActiveCfg = ReleaseNet40|Any CPU
+		{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}.ReleaseNet40|Any CPU.Build.0 = ReleaseNet40|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.DebugNet40|Any CPU.ActiveCfg = Debug|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.DebugNet40|Any CPU.Build.0 = Debug|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
+		{F904B4BE-C7CF-4E4F-85B7-B006A2D1C561}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.DebugNet40|Any CPU.ActiveCfg = Debug|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.DebugNet40|Any CPU.Build.0 = Debug|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
+		{0518E682-510D-48F8-BB14-7151C50A1850}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
