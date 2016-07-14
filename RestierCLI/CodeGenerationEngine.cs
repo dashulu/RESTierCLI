@@ -23,6 +23,8 @@ namespace RestierCLI
 
         private ArrayList databaseTables = new ArrayList();
 
+        private string databaseName;
+
         class DatabaseTable
         {
             public string catalogName { get; set; }
@@ -37,8 +39,9 @@ namespace RestierCLI
             }
         }
 
-        public CodeGenerationEngine (string connectionString)
+        public CodeGenerationEngine (string connectionString, string databaseName)
         {
+            this.databaseName = databaseName;
             this.connectionString = connectionString;
             providerInvariantName = "System.Data.SqlClient";
             appConfigConnectionPropertyName = null;
@@ -135,22 +138,7 @@ namespace RestierCLI
                 GenerateDatabaseTables();
                 if (databaseTables.Count == 0)
                     return null;
-                string databaseName;
                 DatabaseTable tableItem = (DatabaseTable) (databaseTables[0]);
-                if (tableItem.catalogName != null && tableItem.catalogName.Length != 0)
-                {
-                    int subStringBegin = tableItem.catalogName.LastIndexOf('\\');
-                    subStringBegin = subStringBegin == -1 ? 0 : subStringBegin;
-                    int subStringEnd = tableItem.catalogName.LastIndexOf('.');
-                    if (subStringBegin < subStringEnd - 1)
-                        databaseName = tableItem.catalogName.Substring(subStringBegin + 1, subStringEnd - subStringBegin - 1);
-                    else
-                        databaseName = tableItem.catalogName.Substring(subStringBegin + 1);
-                }
-                else
-                {
-                    databaseName = "database";
-                }
                 ModelBuilderSettings modelBuilderSettings = new ModelBuilderSettings();
                 modelBuilderSettings._designTimeConnectionString = connectionString;
                 modelBuilderSettings._appConfigConnectionString = connectionString;
@@ -183,7 +171,7 @@ namespace RestierCLI
                 mbe.GenerateModel(modelBuilderSettings);
 
                 var generator = new MyCodeFirstModelGenerator();
-                return generator.Generate(mbe.Model, databaseName + ".Models", databaseName, databaseName);
+                return generator.Generate(mbe.Model, databaseName + ".Models", databaseName + "Context", databaseName);
             }
             catch (Exception e)
             {
