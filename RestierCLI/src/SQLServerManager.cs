@@ -28,11 +28,6 @@ namespace RestierCLI
             this.connectionString = connectionString;
         }
 
-        ~SQLServerManager()
-        {
-            if (ec != null && ec.State == ConnectionState.Open)
-                ec.Close();
-        }
 
         /// <summary>
         /// Connect to the database figured out by the connection string
