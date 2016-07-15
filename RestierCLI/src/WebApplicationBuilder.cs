@@ -9,44 +9,84 @@ using System.Xml;
 
 namespace RestierCLI
 {
-    class ProjectManager
+    /// <summary>
+    /// Build an .NET Web Application Projcet which support a standardized, 
+    /// OData V4 based RESTful services on .NET platform from a connection string
+    /// </summary>
+    class WebApplicationBuilder
     {
-        private string destinationPath;
+        // Path for the newly-build project
+        private readonly string projectPath;
+        // Name of the newly-build project
+        private readonly string projectName;
+        // the connection string of the database which gonna create a OData V4 based RESTful services
+        private readonly string connectionString;
+        // the path of the templete project
         private string sourcePath = "C:\\Users\\t-qiche\\Documents\\Visual Studio 2015\\Projects\\RestierCLI\\RestierCLI\\TempleteProject";
+        // the name of the templete project
         private const string templeteProjectName = "TempleteProject";
-        private string targetProjectName;
-        private string connectionString;
-        CodeGenerationEngine engine;
+        // files whose content should be updated in the new web application project
         private ArrayList filesNeedToBeModified = new ArrayList();
 
-        public ProjectManager(string connectionString, string destinationPath, string targetProjectName)
+        public WebApplicationBuilder(string connection, string projectName, string projectPath)
         {
-            this.connectionString = connectionString;
-            this.destinationPath = destinationPath + "\\" +  targetProjectName;
-            Console.WriteLine(this.destinationPath);
-            this.targetProjectName = targetProjectName;
+            this.connectionString = connection;
+            this.projectName = projectName;
+            this.projectPath = projectPath + "\\" + projectName;
         }
 
-        public ProjectManager(string connectionString, string targetProjectName)
+        /// <summary>
+        /// Generate an .NET Web Application Projcet which support a standardized, 
+        /// OData V4 based RESTful services on .NET platform from a connection string
+        /// </summary>
+        /// <returns>true for success, false for failure</returns>
+        public bool Generate()
         {
-            this.connectionString = connectionString;
-            this.targetProjectName = targetProjectName;
-            this.destinationPath = System.Environment.CurrentDirectory;
-            Console.WriteLine("System.Environment.CurrentDirectory:" + System.Environment.CurrentDirectory);
-            Console.WriteLine("Directory.GetCurrentDirectory:" + Directory.GetCurrentDirectory());
+            bool flag;
+            flag = _CopyFolder(sourcePath, projectPath);
+            initFilesNeedToBeModified();
+            foreach (var file in filesNeedToBeModified)
+            {
+                string fileName = projectPath + "\\" + file.ToString();
+                if (!File.Exists(fileName))
+                {
+                    flag = false;
+                }
+                ChangeFileContent(fileName, templeteProjectName, projectName);
+            }
+
+            if (!AddConnectionStringInWebConfigFile())
+                flag = false;
+            if (!ChangeWebApiConfigFile())
+                flag = false;
+
+            var engine = new CodeGenerationEngine(connectionString, projectName);
+            AddModleFile(engine.GenerateCode());
+            return flag;
         }
 
-        private void initFilesNeedToBeModified()
+        private bool AddConnectionStringInWebConfigFile()
         {
-            filesNeedToBeModified.Add(targetProjectName + ".sln");
-            filesNeedToBeModified.Add(targetProjectName + "\\" + targetProjectName + ".csproj");
-            filesNeedToBeModified.Add(targetProjectName + "\\Global.asax");
-            filesNeedToBeModified.Add(targetProjectName + "\\Global.asax.cs");
+            string WebConfigFileName = projectPath + "\\" + projectName + "\\Web.config";
+            if (!File.Exists(WebConfigFileName))
+                return false;
+            XmlDocument doc = new XmlDocument();
+            doc.Load(WebConfigFileName);
+            XmlElement node = (XmlElement)doc.GetElementsByTagName("configuration").Item(0);
+            XmlElement connectionStringsNode = doc.CreateElement("connectionStrings", node.NamespaceURI);
+            XmlElement nodeInConnectionStringNode = doc.CreateElement("add", node.NamespaceURI);
+            nodeInConnectionStringNode.SetAttribute("name", projectName);
+            nodeInConnectionStringNode.SetAttribute("connectionString", this.connectionString);
+            nodeInConnectionStringNode.SetAttribute("providerName", "System.Data.SqlClient");
+            connectionStringsNode.AppendChild(nodeInConnectionStringNode);
+            node.AppendChild(connectionStringsNode);
+            doc.Save(WebConfigFileName);
+            return true;
         }
 
         private bool ChangeWebApiConfigFile()
         {
-            string fileName = destinationPath + "\\" + targetProjectName + "\\App_Start\\WebApiConfig.cs";
+            string fileName = projectPath + "\\" + projectName + "\\App_Start\\WebApiConfig.cs";
             if (!File.Exists(fileName))
             {
                 return false;
@@ -61,9 +101,9 @@ namespace RestierCLI
                 index = str.IndexOf(templeteProjectName, index);
                 index += templeteProjectName.Length;
             }
-            str = str.Replace(templeteProjectName, targetProjectName);
-            index = index - templeteProjectName.Length + 2 * (targetProjectName.Length - templeteProjectName.Length);
-            index += targetProjectName.Length;
+            str = str.Replace(templeteProjectName, projectName);
+            index = index - templeteProjectName.Length + 2 * (projectName.Length - templeteProjectName.Length);
+            index += projectName.Length;
             str = str.Insert(index, "Context");
 
             StreamWriter sw = new StreamWriter(fileName, false);
@@ -71,6 +111,7 @@ namespace RestierCLI
             sw.Close();
             return true;
         }
+
         private void ChangeFileContent(string filePath, string originalWord, string newWord)
         {
             StreamReader sr = new StreamReader(filePath);
@@ -82,29 +123,18 @@ namespace RestierCLI
             sw.Close();
         }
 
-
-        private bool AddConnectionStringInWebConfigFile()
+        private void initFilesNeedToBeModified()
         {
-            string WebConfigFileName = destinationPath + "\\" + targetProjectName + "\\Web.config";
-            if (!File.Exists(WebConfigFileName))
-                return false;
-            XmlDocument doc = new XmlDocument();
-            doc.Load(WebConfigFileName);
-            XmlElement node = (XmlElement)doc.GetElementsByTagName("configuration").Item(0);
-            XmlElement connectionStringsNode = doc.CreateElement("connectionStrings", node.NamespaceURI);
-            XmlElement nodeInConnectionStringNode = doc.CreateElement("add", node.NamespaceURI);
-            nodeInConnectionStringNode.SetAttribute("name", targetProjectName);
-            nodeInConnectionStringNode.SetAttribute("connectionString", this.connectionString);
-            nodeInConnectionStringNode.SetAttribute("providerName", "System.Data.SqlClient");
-            connectionStringsNode.AppendChild(nodeInConnectionStringNode);
-            node.AppendChild(connectionStringsNode);
-            doc.Save(WebConfigFileName);
-            return true;
+            filesNeedToBeModified.Add(projectName + ".sln");
+            filesNeedToBeModified.Add(projectName + "\\" + projectName + ".csproj");
+            filesNeedToBeModified.Add(projectName + "\\Global.asax");
+            filesNeedToBeModified.Add(projectName + "\\Global.asax.cs");
         }
+
 
         private bool AddModelFileItemInCSPROJFile(IEnumerable<KeyValuePair<string, string>> modelFiles)
         {
-            string CSPROJFileName = destinationPath + "\\" + targetProjectName + "\\" + targetProjectName + ".csproj";
+            string CSPROJFileName = projectPath + "\\" + projectName + "\\" + projectName + ".csproj";
             if (!File.Exists(CSPROJFileName))
                 return false;
             XmlDocument doc = new XmlDocument();
@@ -117,7 +147,7 @@ namespace RestierCLI
                 CompileNode.SetAttribute("Include", "Models\\" + file.Key);
                 ItemGroupNode.AppendChild(CompileNode);
             }
-     
+
             node.AppendChild(ItemGroupNode);
             doc.Save(CSPROJFileName);
             return true;
@@ -127,8 +157,8 @@ namespace RestierCLI
         {
             FileStream fs;
             StreamWriter streamwrite;
-            string modelDirPath = destinationPath + "\\" + targetProjectName + "\\Models\\"; 
-            foreach(var file in modelFiles)
+            string modelDirPath = projectPath + "\\" + projectName + "\\Models\\";
+            foreach (var file in modelFiles)
             {
                 fs = File.Create(modelDirPath + file.Key);
                 fs.Close();
@@ -141,31 +171,7 @@ namespace RestierCLI
         }
 
 
-
-        public bool CreateProject()
-        {
-            bool flag;
-            flag = _CopyFolder(sourcePath, destinationPath);
-            initFilesNeedToBeModified();
-            foreach (var file in filesNeedToBeModified)
-            {
-                string fileName = destinationPath + "\\" + file.ToString();
-                if (!File.Exists(fileName))
-                {
-                    flag = false;
-                }
-                ChangeFileContent(fileName, templeteProjectName, targetProjectName);
-            }
-
-            if (!AddConnectionStringInWebConfigFile())
-                flag = false;
-            if (!ChangeWebApiConfigFile())
-                flag = false;
-
-            engine = new CodeGenerationEngine(connectionString, targetProjectName);
-            AddModleFile(engine.GenerateCode());
-            return flag;
-        }
+        // copy all content in directory sPath to dPath
         private bool _CopyFolder(string sPath, string dPath)
         {
             bool flag = true;
@@ -175,7 +181,7 @@ namespace RestierCLI
                 {
                     return false;
                 }
-                // create destination directory
+               
                 if (!Directory.Exists(dPath))
                 {
                     Directory.CreateDirectory(dPath);
@@ -188,16 +194,17 @@ namespace RestierCLI
                 {
                     if (file.Name.Equals(templeteProjectName + ".sln"))
                     {
-                        file.CopyTo(dPath + "\\" + targetProjectName + ".sln", true);
+                        file.CopyTo(dPath + "\\" + projectName + ".sln", true);
                     }
                     else if (file.Name.Equals(templeteProjectName + ".csproj"))
                     {
-                        file.CopyTo(dPath + "\\" + targetProjectName + ".csproj", true);
+                        file.CopyTo(dPath + "\\" + projectName + ".csproj", true);
                     }
                     else if (file.Name.Equals(templeteProjectName + ".csproj.user"))
                     {
-                        file.CopyTo(dPath + "\\" + targetProjectName + ".csproj.user", true);
-                    } else
+                        file.CopyTo(dPath + "\\" + projectName + ".csproj.user", true);
+                    }
+                    else
                     {
                         file.CopyTo(dPath + "\\" + file.Name, true);
                     }
@@ -211,8 +218,9 @@ namespace RestierCLI
                 {
                     if (subDir.Name.Equals(templeteProjectName))
                     {
-                        flag = _CopyFolder(subDir.FullName, dPath + "//" + targetProjectName) ? flag : false;
-                    } else
+                        flag = _CopyFolder(subDir.FullName, dPath + "//" + projectName) ? flag : false;
+                    }
+                    else
                     {
                         flag = _CopyFolder(subDir.FullName, dPath + "//" + subDir.Name) ? flag : false;
                     }

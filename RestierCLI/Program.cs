@@ -24,12 +24,10 @@ namespace RestierCLI
                 */
             try
             {
+               
                 CommandLineApplication t = ExecuteCommand.Create();
-                string[] a = { "create" };
-                t.Execute(a);
-                string[] b = { "create", "-h" };
-                t.Execute(b);
-                string[] c = { "create", connectiongString };
+               
+                string[] c = { "create", connectiongString, "-n", "HelloWorld" };
                 t.Execute(c);
              
             } catch (Exception ex)

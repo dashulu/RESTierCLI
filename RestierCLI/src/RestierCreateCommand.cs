@@ -39,12 +39,13 @@ namespace RestierCLI
                 else
                     dir = directory.Value();
 
-                // ToDo  get the database name
-                if (string.IsNullOrEmpty(projectName.Value()))
-                    pName = "MyTest";
-                else
-                    pName = projectName.Value();
-                // ToDo  call the project manager to create the .NET Web Application
+                var sqlManager = new SQLServerManager(connection.Value);
+                if (!sqlManager.connect())
+                    return 0;
+
+                pName = sqlManager.GetDatabaseName();
+                var builder = new WebApplicationBuilder(connection.Value, pName, dir);
+                builder.Generate();
                 return 0;
             });
         }

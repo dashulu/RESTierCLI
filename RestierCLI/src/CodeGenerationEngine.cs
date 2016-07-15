@@ -14,128 +14,40 @@ namespace RestierCLI
 {
     public class CodeGenerationEngine
     {
-        public string connectionString { get; set; }
-        public string providerInvariantName { get; set; }
+        private string connectionString;
+        private string providerInvariantName = "System.Data.SqlClient";
 
-        private string appConfigConnectionPropertyName{get; set;}
+        private string appConfigConnectionPropertyName;
 
         private Version maxVersion = new Version(3, 0, 0, 0);
 
         private ArrayList databaseTables = new ArrayList();
 
-        private string databaseName;
+        private string projectName;
 
-        class DatabaseTable
+        private SQLServerManager sqlManager = null;
+
+        public CodeGenerationEngine (string connectionString, string projectName)
         {
-            public string catalogName { get; set; }
-            public string schemaName { get; set; }
-            public string tableName { get; set; }
-
-            public DatabaseTable (string catalogName, string schemaName, string tableName)
-            {
-                this.catalogName = catalogName;
-                this.schemaName = schemaName;
-                this.tableName = tableName;
-            }
-        }
-
-        public CodeGenerationEngine (string connectionString, string databaseName)
-        {
-            this.databaseName = databaseName;
             this.connectionString = connectionString;
-            providerInvariantName = "System.Data.SqlClient";
-            appConfigConnectionPropertyName = null;
+            this.projectName = projectName;
+            sqlManager = new SQLServerManager(connectionString);
         }
 
-        private bool GenerateDatabaseTables()
-        {
-            EntityConnection ec = null;
-            try
-            {
-                Version actualEntityFrameworkConnectionVersion;
-                ec = new StoreSchemaConnectionFactory().Create(
-                    DependencyResolver.Instance,
-                    providerInvariantName,
-                    connectionString,
-                    maxVersion,
-                    out actualEntityFrameworkConnectionVersion);
-
-                using (var command = new EntityCommand(null, ec, DependencyResolver.Instance))
-                {
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = SelectTablesESqlQuery;
-                    ec.Open();
-                    DbDataReader reader = null;
-                    try
-                    {
-                        reader = command.ExecuteReader(CommandBehavior.SequentialAccess);
-                        while (reader.Read())
-                        {
-                            if (reader.FieldCount == 3)
-                            {
-                                // the types coming back through the reader may not be a string 
-                                // (eg, SqlCE returns System.DbNull for catalogName & schemaName), so cast carefully
-                                var catalogName = reader.GetValue(0) as String;
-                                var schemaName = reader.GetValue(1) as String;
-                                var name = reader.GetValue(2) as String;
-
-                                if (String.IsNullOrEmpty(name) == false)
-                                {
-                                    databaseTables.Add(new DatabaseTable(catalogName, schemaName, name));
-                                }
-                            }
-
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
-                    finally
-                    {
-                        if (reader != null)
-                        {
-                            try
-                            {
-                                reader.Close();
-                                reader.Dispose();
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
-            finally
-            {
-                if (ec != null)
-                {
-                    try
-                    {
-                        ec.Close();
-                        ec.Dispose();
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-            }
-            return true;
-        }
-
+        /// <summary>
+        /// Generate the mapping class for each table in the database
+        /// </summary>
+        /// <returns>return the mapping class for each table in the database,
+        /// the key is the class file name and the value is the code for the class</returns>
         public IEnumerable<KeyValuePair<string, string>> GenerateCode()
         {
             try
             {
-                GenerateDatabaseTables();
+                if(!sqlManager.connect())
+                {
+                    return null;
+                }
+                databaseTables = sqlManager.GetDatabaseTables();
                 if (databaseTables.Count == 0)
                     return null;
                 DatabaseTable tableItem = (DatabaseTable) (databaseTables[0]);
@@ -145,9 +57,7 @@ namespace RestierCLI
                 modelBuilderSettings._designTimeProviderInvariantName = providerInvariantName;
                 modelBuilderSettings._runtimeProviderInvariantName = providerInvariantName;
                 modelBuilderSettings.SaveConnectionStringInAppConfig = true;
-
-                modelBuilderSettings.AppConfigConnectionPropertyName = databaseName;
-                //                modelBuilderSettings.ModelNamespace = "ModelNamespace";
+                modelBuilderSettings.AppConfigConnectionPropertyName = projectName;
                 modelBuilderSettings.UsePluralizationService = true;
                 modelBuilderSettings.IncludeForeignKeysInModel = true;
                 SchemaFilterEntryBag schemaFilterEntryBag = new Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine.SchemaFilterEntryBag();
@@ -163,7 +73,6 @@ namespace RestierCLI
 
                 modelBuilderSettings.DatabaseObjectFilters = schemaFilterEntryBag.CollapseAndOptimize(SchemaFilterPolicy.GetByValEdmxPolicy());
                 modelBuilderSettings.ModelBuilderEngine = new MyCodeFirstModelBuilderEngine();
-//                modelBuilderSettings.ModelPath = "C:\\Users\\t-qiche\\Documents\\Visual Studio 2015\\Projects\\WebApplication4\\WebApplication4";
                 modelBuilderSettings.TargetSchemaVersion = new Version(3, 0, 0, 0);
                 modelBuilderSettings.ProviderManifestToken = "2008";
 
@@ -171,7 +80,7 @@ namespace RestierCLI
                 mbe.GenerateModel(modelBuilderSettings);
 
                 var generator = new MyCodeFirstModelGenerator();
-                return generator.Generate(mbe.Model, databaseName + ".Models", databaseName + "Context", databaseName);
+                return generator.Generate(mbe.Model, projectName + ".Models", projectName + "Context", projectName);
             }
             catch (Exception e)
             {
@@ -179,17 +88,5 @@ namespace RestierCLI
                 return null;
             }
         }
-
-        private const string SelectTablesESqlQuery = @"
-            SELECT 
-                t.CatalogName
-            ,   t.SchemaName                    
-            ,   t.Name
-            FROM
-                SchemaInformation.Tables as t
-            ORDER BY
-                t.SchemaName
-            ,   t.Name
-            ";
     }
 }
