@@ -57,14 +57,13 @@ namespace RestierCLI
 
             if (!AddConnectionStringInWebConfigFile())
                 flag = false;
-            if (!ChangeWebApiConfigFile())
-                flag = false;
 
             var engine = new CodeGenerationEngine(connectionString, projectName);
             AddModleFile(engine.GenerateCode());
             return flag;
         }
 
+        // add a connection node in the Web.config file
         private bool AddConnectionStringInWebConfigFile()
         {
             string WebConfigFileName = projectPath + "\\" + projectName + "\\Web.config";
@@ -84,33 +83,7 @@ namespace RestierCLI
             return true;
         }
 
-        private bool ChangeWebApiConfigFile()
-        {
-            string fileName = projectPath + "\\" + projectName + "\\App_Start\\WebApiConfig.cs";
-            if (!File.Exists(fileName))
-            {
-                return false;
-            }
-            StreamReader sr = new StreamReader(fileName);
-            string str = sr.ReadToEnd();
-            sr.Close();
-            int index = 0;
-            // find the index where the templeProjectName appears for the third time in the text
-            for (int i = 0; i < 3; i++)
-            {
-                index = str.IndexOf(templeteProjectName, index);
-                index += templeteProjectName.Length;
-            }
-            str = str.Replace(templeteProjectName, projectName);
-            index = index - templeteProjectName.Length + 2 * (projectName.Length - templeteProjectName.Length);
-            index += projectName.Length;
-            str = str.Insert(index, "Context");
 
-            StreamWriter sw = new StreamWriter(fileName, false);
-            sw.WriteLine(str);
-            sw.Close();
-            return true;
-        }
 
         private void ChangeFileContent(string filePath, string originalWord, string newWord)
         {
@@ -129,6 +102,7 @@ namespace RestierCLI
             filesNeedToBeModified.Add(projectName + "\\" + projectName + ".csproj");
             filesNeedToBeModified.Add(projectName + "\\Global.asax");
             filesNeedToBeModified.Add(projectName + "\\Global.asax.cs");
+            filesNeedToBeModified.Add(projectName + "\\App_Start\\WebApiConfig.cs");
         }
 
 

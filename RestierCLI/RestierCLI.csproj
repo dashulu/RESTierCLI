@@ -51,7 +51,6 @@
     <Compile Include="src\DatabaseTable.cs" />
     <Compile Include="src\ExecuteCommand.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="src\ProjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\RestierBuildCommand.cs" />
     <Compile Include="src\RestierCreateCommand.cs" />

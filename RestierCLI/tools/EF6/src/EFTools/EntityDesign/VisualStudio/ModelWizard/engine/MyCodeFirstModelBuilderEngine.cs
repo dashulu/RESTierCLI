@@ -46,7 +46,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 throw new ArgumentOutOfRangeException(Resources.Engine_EmptyConnStringErrorMsg);
             }
 
-            Console.WriteLine("I'M here.");
 
             var generatingModelWatch = Stopwatch.StartNew();
 

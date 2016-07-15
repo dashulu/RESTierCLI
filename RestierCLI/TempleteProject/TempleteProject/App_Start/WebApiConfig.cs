@@ -22,7 +22,7 @@ namespace TempleteProject
         {
             // Web API configuration and services
             config.SetUrlConventions(ODataUrlConventions.ODataSimplified);
-            await config.MapRestierRoute<EntityFrameworkApi<TempleteProject>>(
+            await config.MapRestierRoute<EntityFrameworkApi<TempleteProjectDbContext>>(
                 "TempleteProject",
                 "api/TempleteProject",
                 new RestierBatchHandler(GlobalConfiguration.DefaultServer));

@@ -17,8 +17,6 @@ namespace RestierCLI
         private string connectionString;
         private string providerInvariantName = "System.Data.SqlClient";
 
-        private string appConfigConnectionPropertyName;
-
         private Version maxVersion = new Version(3, 0, 0, 0);
 
         private ArrayList databaseTables = new ArrayList();
@@ -70,7 +68,6 @@ namespace RestierCLI
                     schemaFilterEntryBag.IncludedTableEntries.Add(item);
                 }
 
-
                 modelBuilderSettings.DatabaseObjectFilters = schemaFilterEntryBag.CollapseAndOptimize(SchemaFilterPolicy.GetByValEdmxPolicy());
                 modelBuilderSettings.ModelBuilderEngine = new MyCodeFirstModelBuilderEngine();
                 modelBuilderSettings.TargetSchemaVersion = new Version(3, 0, 0, 0);
@@ -80,7 +77,7 @@ namespace RestierCLI
                 mbe.GenerateModel(modelBuilderSettings);
 
                 var generator = new MyCodeFirstModelGenerator();
-                return generator.Generate(mbe.Model, projectName + ".Models", projectName + "Context", projectName);
+                return generator.Generate(mbe.Model, projectName + ".Models", projectName + "DbContext", projectName);
             }
             catch (Exception e)
             {
