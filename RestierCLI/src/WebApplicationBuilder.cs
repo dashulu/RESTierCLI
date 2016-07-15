@@ -84,7 +84,7 @@ namespace RestierCLI
         }
 
 
-
+        // replace the originalWord with the newWord in the file
         private void ChangeFileContent(string filePath, string originalWord, string newWord)
         {
             StreamReader sr = new StreamReader(filePath);
@@ -96,6 +96,7 @@ namespace RestierCLI
             sw.Close();
         }
 
+        // Get the file that should be updated in the new web application
         private void initFilesNeedToBeModified()
         {
             filesNeedToBeModified.Add(projectName + ".sln");
@@ -105,7 +106,7 @@ namespace RestierCLI
             filesNeedToBeModified.Add(projectName + "\\App_Start\\WebApiConfig.cs");
         }
 
-
+        // To add files to the cs project, we need to update the .csproj file
         private bool AddModelFileItemInCSPROJFile(IEnumerable<KeyValuePair<string, string>> modelFiles)
         {
             string CSPROJFileName = projectPath + "\\" + projectName + "\\" + projectName + ".csproj";
@@ -127,6 +128,7 @@ namespace RestierCLI
             return true;
         }
 
+        // Generate the files in the Modles directory
         private bool AddModleFile(IEnumerable<KeyValuePair<string, string>> modelFiles)
         {
             FileStream fs;
