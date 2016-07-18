@@ -45,14 +45,14 @@ namespace RestierCLI
                     pName = projectName.Value();
                 }
  
-                Console.WriteLine(CmdMSBuild(pName, buildSetting.Value()));
+                CmdMSBuild(pName, buildSetting.Value());
                 
                 return 0;
             });
         }
 
         // execute the msbuild to build a project
-        private static string CmdMSBuild(string projectName, string buildSetting)
+        private static void CmdMSBuild(string projectName, string buildSetting)
         {
 
             Process p = new Process();
@@ -61,22 +61,12 @@ namespace RestierCLI
 
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.RedirectStandardInput = true;
-
-            p.StartInfo.RedirectStandardOutput = true;
-
-            p.StartInfo.RedirectStandardError = true;
-
-            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.Arguments = "/c " + MSBuildDir + "MSBuild.exe " + projectName +
+                (string.IsNullOrEmpty(buildSetting) ? "" : " " + buildSetting);
 
             p.Start();
 
-            p.StandardInput.WriteLine(MSBuildDir + "MSBuild.exe " + projectName + 
-                (string.IsNullOrEmpty(buildSetting) ? "" : " " + buildSetting));
-            p.StandardInput.WriteLine("exit");
-            string strRst = p.StandardOutput.ReadToEnd();
-            p.Close();
-            return ignoreLastLineContainWordExit(strRst);
+            p.WaitForExit();
         }
 
         // Ignore the last line that contains the word "exit"

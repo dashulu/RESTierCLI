@@ -26,11 +26,11 @@ namespace RestierCLI
             {
              
                 CommandLineApplication t = ExecuteCommand.Create();
-               
-                string[] c = { "build" };
+               /*
+                string[] c = { "run", "-d", "Test" };
           
-         //       t.Execute(c);
-              
+                t.Execute(c);
+              */
                 CommandLineApplication t2 = ExecuteCommand.Create();
                 t2.Execute(args);
              

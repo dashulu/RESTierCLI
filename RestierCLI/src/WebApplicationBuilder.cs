@@ -58,6 +58,9 @@ namespace RestierCLI
             if (!AddConnectionStringInWebConfigFile())
                 flag = false;
 
+            if (!UpdateApplicationhostConfigFile())
+                flag = false;
+
             var engine = new CodeGenerationEngine(connectionString, projectName);
             AddModleFile(engine.GenerateCode());
             return flag;
@@ -125,6 +128,21 @@ namespace RestierCLI
 
             node.AppendChild(ItemGroupNode);
             doc.Save(CSPROJFileName);
+            return true;
+        }
+
+        private bool UpdateApplicationhostConfigFile()
+        {
+            string fileName = projectPath + "\\.vs\\config\\applicationhost.config";
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            XmlDocument doc = new XmlDocument();
+            doc.Load(fileName);
+            XmlElement node = (XmlElement)doc.GetElementsByTagName("virtualDirectory").Item(0);
+            node.SetAttribute("physicalPath", projectPath + "\\" + projectName);
+            doc.Save(fileName);
             return true;
         }
 
