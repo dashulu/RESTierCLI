@@ -194,11 +194,11 @@ namespace RestierCLI
                 {
                     if (subDir.Name.Equals(templeteProjectName))
                     {
-                        flag = _CopyFolder(subDir.FullName, dPath + "//" + projectName) ? flag : false;
+                        flag = _CopyFolder(subDir.FullName, dPath + "\\" + projectName) ? flag : false;
                     }
                     else
                     {
-                        flag = _CopyFolder(subDir.FullName, dPath + "//" + subDir.Name) ? flag : false;
+                        flag = _CopyFolder(subDir.FullName, dPath + "\\" + subDir.Name) ? flag : false;
                     }
                 }
             }

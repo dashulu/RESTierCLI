@@ -27,23 +27,29 @@ namespace RestierCLI
             command.OnExecute(() =>
             {
                 string dir;
-                string pName;
+                string pName = null;
+                
                 if (string.IsNullOrEmpty(connection.Value))
                 {
                     Console.WriteLine("Missing required argument '" + connection.Name + "'");
                     command.ShowHelp();
                     return 0;
                 }
+
                 if (string.IsNullOrEmpty(directory.Value()))
                     dir = Directory.GetCurrentDirectory();
                 else
                     dir = directory.Value();
 
+                if (!string.IsNullOrEmpty(projectName.Value()))
+                    pName = projectName.Value();
+
+                
                 var sqlManager = new SQLServerManager(connection.Value);
                 if (!sqlManager.connect())
                     return 0;
-
-                pName = sqlManager.GetDatabaseName();
+                if (pName == null)
+                    pName = sqlManager.GetDatabaseName();
                 var builder = new WebApplicationBuilder(connection.Value, pName, dir);
                 builder.Generate();
                 return 0;

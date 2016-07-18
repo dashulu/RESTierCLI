@@ -165,6 +165,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             var providerServices = resolver.GetService<DbProviderServices>(providerInvariantName);
             Debug.Assert(providerServices != null, "Trying to get unregistered provider.");
 
+           
+
+
             var providerManifest =
                 providerServices.GetProviderManifest(
                     providerServices.GetProviderManifestToken(providerConnection));

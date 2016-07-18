@@ -71,7 +71,7 @@ namespace RestierCLI
                 modelBuilderSettings.DatabaseObjectFilters = schemaFilterEntryBag.CollapseAndOptimize(SchemaFilterPolicy.GetByValEdmxPolicy());
                 modelBuilderSettings.ModelBuilderEngine = new MyCodeFirstModelBuilderEngine();
                 modelBuilderSettings.TargetSchemaVersion = new Version(3, 0, 0, 0);
-                modelBuilderSettings.ProviderManifestToken = "2008";
+                modelBuilderSettings.ProviderManifestToken = "2008";  // connect function get the value
 
                 var mbe = modelBuilderSettings.ModelBuilderEngine;
                 mbe.GenerateModel(modelBuilderSettings);
