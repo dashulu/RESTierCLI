@@ -21,8 +21,7 @@ namespace RestierCLI
         private readonly string projectName;
         // the connection string of the database which gonna create a OData V4 based RESTful services
         private readonly string connectionString;
-        // the path of the templete project
-        private string sourcePath = "C:\\Users\\t-qiche\\Documents\\Visual Studio 2015\\Projects\\RestierCLI\\RestierCLI\\TempleteProject";
+       
         // the name of the templete project
         private const string templeteProjectName = "TempleteProject";
         // files whose content should be updated in the new web application project
@@ -43,7 +42,7 @@ namespace RestierCLI
         public bool Generate()
         {
             bool flag;
-            flag = _CopyFolder(sourcePath, projectPath);
+            flag = _CopyFolder(PathConfig.templeProjectPath, projectPath);
             initFilesNeedToBeModified();
             foreach (var file in filesNeedToBeModified)
             {

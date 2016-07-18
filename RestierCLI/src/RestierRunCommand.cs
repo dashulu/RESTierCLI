@@ -11,7 +11,7 @@ namespace RestierCLI
 {
     class RestierRunCommand
     {
-        private const string IISExpressDir = "C:\\Program Files (x86)\\IIS Express\\";
+        
         public static void Configure(CommandLineApplication command)
         {
             command.Description = "Run a .Net WebApplication";
@@ -56,7 +56,7 @@ namespace RestierCLI
             Process p = new Process();
 
             p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.Arguments = "/c \"" + IISExpressDir + "iisexpress.exe\" " +
+            p.StartInfo.Arguments = "/c \"" + PathConfig.IISExpressPath + "iisexpress.exe\" " +
                  "/config:" + projectDir + "\\" + ".vs\\config\\applicationhost.config";
             p.StartInfo.UseShellExecute = false;
             p.Start();

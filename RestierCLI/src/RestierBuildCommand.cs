@@ -11,7 +11,7 @@ namespace RestierCLI
 {
     internal class RestierBuildCommand
     {
-        private const string MSBuildDir = "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\";
+        
         public static void Configure(CommandLineApplication command)
         {
             command.Description = "Build a .Net WebApplication";
@@ -61,7 +61,7 @@ namespace RestierCLI
 
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.Arguments = "/c " + MSBuildDir + "MSBuild.exe " + projectName +
+            p.StartInfo.Arguments = "/c " + PathConfig.MSBuildPath + "MSBuild.exe " + projectName +
                 (string.IsNullOrEmpty(buildSetting) ? "" : " " + buildSetting);
 
             p.Start();
