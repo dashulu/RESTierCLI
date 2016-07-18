@@ -12,7 +12,7 @@ namespace RestierCLI
     {
         public static void Configure(CommandLineApplication command)
         {
-            command.Description = "Create";
+            command.Description = "Create a .Net WebApplication from a connnection string of the database";
             command.HelpOption("-h|--help");
 
             var connection = command.Argument("[connection]",
@@ -20,8 +20,8 @@ namespace RestierCLI
             CommandOption directory = command.Option("-d|--directory", 
                 "The directory to store the .NET WebApplication, default to current directory",
                 CommandOptionType.SingleValue);
-            CommandOption projectName = command.Option("-n|--name",
-                "The project name to be craeted, default to the database name",
+            CommandOption projectName = command.Option("-p|--project-name",
+                "The project to be craeted, default to the name of the database",
                 CommandOptionType.SingleValue);
 
             command.OnExecute(() =>

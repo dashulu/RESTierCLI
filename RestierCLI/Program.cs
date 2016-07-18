@@ -24,16 +24,13 @@ namespace RestierCLI
                 */
             try
             {
-               /*
+             
                 CommandLineApplication t = ExecuteCommand.Create();
                
-                string[] c = { "create", connectiongString, "-n", "HelloWorld", "-d", "C:\\Users\\t-qiche\\Downloads" };
-                for (int i = 0; i < c.Length; i++)
-                    Console.WriteLine(c[i]);
-                t.Execute(c);
-                for (int i = 0; i < args.Length; i++)
-                    Console.WriteLine(args[i]);
-                    */
+                string[] c = { "build" };
+          
+         //       t.Execute(c);
+              
                 CommandLineApplication t2 = ExecuteCommand.Create();
                 t2.Execute(args);
              

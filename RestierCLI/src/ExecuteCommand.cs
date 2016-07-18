@@ -29,6 +29,7 @@ namespace RestierCLI
             app.VersionOption("-v|--version", versionString);
 
             app.Command("create", c => RestierCreateCommand.Configure(c));
+            app.Command("build", c => RestierBuildCommand.Configure(c));
             return app;
         }
     }
