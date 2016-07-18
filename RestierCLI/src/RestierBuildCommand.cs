@@ -21,7 +21,7 @@ namespace RestierCLI
                " The project to build, default to the first project in current directory",
                CommandOptionType.SingleValue);
             CommandOption buildSetting = command.Option("--build-setting",
-               "Parameter for msbuild when complile the project",
+               "Parameter for the msbuild when complile the project",
                CommandOptionType.SingleValue);
             command.OnExecute(() =>
             {
