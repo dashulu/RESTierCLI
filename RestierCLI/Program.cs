@@ -9,6 +9,7 @@ using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
 using System.IO;
 using System.Xml;
 using Microsoft.Extensions.CommandLineUtils;
+using NuGet.CommandLine;
 
 namespace RestierCLI
 {
@@ -52,7 +53,10 @@ namespace RestierCLI
               
                 CommandLineApplication t2 = ExecuteCommand.Create();
                 t2.Execute(args);
-             
+                string[] install = { "install", Directory.GetCurrentDirectory() + "\\Packages\\packages.config" };
+                NuGet.CommandLine.Program.MainCore(Directory.GetCurrentDirectory() + "\\Packages", install);
+
+
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);

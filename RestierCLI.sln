@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDesign", "RestierCLI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityDesignerVersioningFacade", "RestierCLI\tools\EF6\src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj", "{0518E682-510D-48F8-BB14-7151C50A1850}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.CommandLine", "RestierCLI\tools\NuGet.Client-release-3.3CommandLine\src\NuGet.Clients\NuGet.CommandLine\NuGet.CommandLine.csproj", "{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{0518E682-510D-48F8-BB14-7151C50A1850}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0518E682-510D-48F8-BB14-7151C50A1850}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
 		{0518E682-510D-48F8-BB14-7151C50A1850}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.DebugNet40|Any CPU.ActiveCfg = Debug|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.DebugNet40|Any CPU.Build.0 = Debug|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
+		{957C4E99-3644-47DD-8F9A-AE36F41EBE4A}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
