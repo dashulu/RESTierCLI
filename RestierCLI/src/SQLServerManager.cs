@@ -20,8 +20,8 @@ namespace RestierCLI
         // the connection string of the SQLServer database
         private readonly string connectionString;
         private EntityConnection ec = null;
-        // specific to SQLServer
-        private const string providerInvariantName = "System.Data.SqlClient";
+        
+        // the latest EntityFramework version in EntityFrameworkVersion class
         private Version maxVersion = new Version(3, 0, 0, 0);
         public SQLServerManager(string connectionString)
         {
@@ -40,7 +40,7 @@ namespace RestierCLI
                 Version actualEntityFrameworkConnectionVersion;
                 ec = new StoreSchemaConnectionFactory().Create(
                     DependencyResolver.Instance,
-                    providerInvariantName,
+                    Config.providerInvariantName,
                     connectionString,
                     maxVersion,
                     out actualEntityFrameworkConnectionVersion);
@@ -78,12 +78,26 @@ namespace RestierCLI
         /// <returns>return all tables in the database</returns>
         public ArrayList GetDatabaseTables()
         {
-            ArrayList tables = new ArrayList();
+            return GetTablesOrViews(SelectTablesESqlQuery);
+        }
+
+        /// <summary>
+        /// get all views in the database
+        /// </summary>
+        /// <returns>return all views in the database</returns>
+        public ArrayList GetDatabaseViews()
+        {
+            return GetTablesOrViews(SelectViewESqlQuery);
+        }
+
+        private ArrayList GetTablesOrViews (string sqlStr)
+        {
+            ArrayList items = new ArrayList();
 
             using (var command = new EntityCommand(null, ec, DependencyResolver.Instance))
             {
                 command.CommandType = CommandType.Text;
-                command.CommandText = SelectTablesESqlQuery;
+                command.CommandText = sqlStr;
                 DbDataReader reader = null;
                 try
                 {
@@ -100,7 +114,7 @@ namespace RestierCLI
 
                             if (String.IsNullOrEmpty(name) == false)
                             {
-                                tables.Add(new DatabaseTable(catalogName, schemaName, name));
+                                items.Add(new DatabaseTableOrView(catalogName, schemaName, name));
                             }
                         }
 
@@ -126,7 +140,7 @@ namespace RestierCLI
                     }
                 }
             }
-            return tables;
+            return items;
         }
 
       
@@ -157,6 +171,18 @@ namespace RestierCLI
             ,   t.Name
             FROM
                 SchemaInformation.Tables as t
+            ORDER BY
+                t.SchemaName
+            ,   t.Name
+            ";
+
+        private const string SelectViewESqlQuery = @"
+            SELECT 
+                t.CatalogName
+            ,   t.SchemaName
+            ,   t.Name
+            FROM
+                SchemaInformation.Views as t
             ORDER BY
                 t.SchemaName
             ,   t.Name

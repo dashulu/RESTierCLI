@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace RestierCLI
 {
-    internal class DatabaseTable
+    internal class DatabaseTableOrView
     {
         public string catalogName { get; set; }
         public string schemaName { get; set; }
-        public string tableName { get; set; }
+        public string tableOrViewName { get; set; }
 
-        public DatabaseTable(string catalogName, string schemaName, string tableName)
+        public DatabaseTableOrView(string catalogName, string schemaName, string name)
         {
             this.catalogName = catalogName;
             this.schemaName = schemaName;
-            this.tableName = tableName;
+            this.tableOrViewName = name;
         }
     }
 }

@@ -52,7 +52,7 @@
     <Compile Include="src\ExecuteCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\PathConfig.cs" />
+    <Compile Include="src\Config.cs" />
     <Compile Include="src\RestierBuildCommand.cs" />
     <Compile Include="src\RestierCreateCommand.cs" />
     <Compile Include="src\RestierRunCommand.cs" />

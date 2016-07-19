@@ -14,6 +14,22 @@ namespace RestierCLI
 {
     class Program
     {
+        static void GetProviderFactoryClasses()
+        {
+            // Retrieve the installed providers and factories.
+            DataTable table = DbProviderFactories.GetFactoryClasses();
+
+            // Display each row and column value.
+            foreach(DataRow row in table.Rows)
+            {
+                foreach (DataColumn column in table.Columns)
+                {
+                    Console.WriteLine(row[column]);
+                }
+            }
+          //  return table;
+        }
+
         private const string connectiongString = "Server=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\t-qiche\\Downloads\\AdventureWorksLT2012_Data.mdf;Integrated Security=True;Trusted_Connection=True;";
         static int Main(string[] args)
         {
@@ -24,13 +40,16 @@ namespace RestierCLI
                 */
             try
             {
-             
+
+               // GetProviderFactoryClasses();
+                /*
                 CommandLineApplication t = ExecuteCommand.Create();
-               /*
-                string[] c = { "run", "-d", "Test" };
+               
+                string[] c = { "create", connectiongString};
           
                 t.Execute(c);
               */
+              
                 CommandLineApplication t2 = ExecuteCommand.Create();
                 t2.Execute(args);
              

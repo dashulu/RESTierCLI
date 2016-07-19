@@ -56,7 +56,7 @@ namespace RestierCLI
             Process p = new Process();
 
             p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.Arguments = "/c \"" + PathConfig.IISExpressPath + "iisexpress.exe\" " +
+            p.StartInfo.Arguments = "/c \"" + Config.IISExpressPath + "iisexpress.exe\" " +
                  "/config:" + projectDir + "\\" + ".vs\\config\\applicationhost.config";
             p.StartInfo.UseShellExecute = false;
             p.Start();

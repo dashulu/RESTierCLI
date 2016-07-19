@@ -42,7 +42,7 @@ namespace RestierCLI
         public bool Generate()
         {
             bool flag;
-            flag = _CopyFolder(PathConfig.templeProjectPath, projectPath);
+            flag = _CopyFolder(Config.templeProjectPath, projectPath);
             initFilesNeedToBeModified();
             foreach (var file in filesNeedToBeModified)
             {
