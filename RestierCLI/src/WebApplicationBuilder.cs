@@ -106,6 +106,7 @@ namespace RestierCLI
             filesNeedToBeModified.Add(projectName + "\\Global.asax");
             filesNeedToBeModified.Add(projectName + "\\Global.asax.cs");
             filesNeedToBeModified.Add(projectName + "\\App_Start\\WebApiConfig.cs");
+            filesNeedToBeModified.Add(".vs\\config\\applicationhost.config");
         }
 
         // To add files to the cs project, we need to update the .csproj file
