@@ -42,27 +42,39 @@ namespace RestierCLI
             try
             {
 
-               // GetProviderFactoryClasses();
+                // GetProviderFactoryClasses();
                 /*
                 CommandLineApplication t = ExecuteCommand.Create();
                
-                string[] c = { "create", connectiongString};
-          
+                string[] c = { "create", connectiongString, "-p", "Hi"};
+
                 t.Execute(c);
-              */
-              
+             */
+            //    test();
                 CommandLineApplication t2 = ExecuteCommand.Create();
                 t2.Execute(args);
-                string[] install = { "install", Directory.GetCurrentDirectory() + "\\Packages\\packages.config" };
-                NuGet.CommandLine.Program.MainCore(Directory.GetCurrentDirectory() + "\\Packages", install);
-
-
-            } catch (Exception ex)
+               
+            
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-         
             return 0;
+        }
+
+        static void test()
+        {
+            CommandLineApplication t = ExecuteCommand.Create();
+
+            string[] c = { "create", connectiongString, "-p", "Hi" };
+            t.Execute(c);
+            CommandLineApplication t1 = ExecuteCommand.Create();
+            string[] b = { "build", "-p", @"Hi\Hi.sln", "--build-setting", "/p:VisualStudioVersion=14.0" };
+            t1.Execute(b);
+            CommandLineApplication t2 = ExecuteCommand.Create();
+            string[] r = { "run", "-d", "Hi" };
+            t2.Execute(r);
         }
     }
 
