@@ -31,7 +31,7 @@ namespace RestierCLI
                 
                 if (string.IsNullOrEmpty(connection.Value))
                 {
-                    Console.WriteLine("Missing required argument '" + connection.Name + "'");
+                    Console.Write("Missing required argument '" + connection.Name + "'");
                     command.ShowHelp();
                     return 0;
                 }

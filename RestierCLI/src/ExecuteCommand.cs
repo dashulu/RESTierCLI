@@ -31,6 +31,12 @@ namespace RestierCLI
             app.Command("create", c => RestierCreateCommand.Configure(c));
             app.Command("build", c => RestierBuildCommand.Configure(c));
             app.Command("run", c => RestierRunCommand.Configure(c));
+
+            app.OnExecute(() =>
+            {
+                app.ShowHelp();
+                return 0;
+            });
             return app;
         }
     }

@@ -17,33 +17,31 @@ namespace RestierCLI
             command.Description = "Run a .Net WebApplication";
             command.HelpOption("-h|--help");
 
-            CommandOption projectName = command.Option("-d|--project-directory",
+            CommandOption projectDir = command.Option("-d|--project-directory",
                " The directory that contains the project to run, default to current directory",
                CommandOptionType.SingleValue);
    
             command.OnExecute(() =>
             {
-                string pName = "";
-                if (string.IsNullOrEmpty(projectName.Value()))
+                string pDir = "";
+                if (string.IsNullOrEmpty(projectDir.Value()))
                 {
-                    string dir = Directory.GetCurrentDirectory();
-                    DirectoryInfo sDir = new DirectoryInfo(dir);
-                    FileInfo[] fileArray = sDir.GetFiles();
-                    foreach (FileInfo file in fileArray)
-                    {
-                        if (file.Extension.Equals("sln"))
-                        {
-                            pName = file.Name;
-                            break;
-                        }
-                    }
+                    pDir = Directory.GetCurrentDirectory();
+                    
                 }
                 else
                 {
-                    pName = projectName.Value();
+                    pDir = projectDir.Value();
+                }
+                if (!File.Exists(pDir + "\\" + ".vs\\config\\applicationhost.config"))
+                {
+                    Console.Write("Can't find the configration file '" + pDir + "\\" + ".vs\\config\\applicationhost.config' \n" +
+                        "Make sure you have set the correct project directory");
+                    command.ShowHelp();
+                    return 0;
                 }
 
-                CmdIISExpress(pName);
+                CmdIISExpress(pDir);
 
                 return 0;
             });
@@ -58,6 +56,7 @@ namespace RestierCLI
             p.StartInfo.FileName = "cmd.exe";
             p.StartInfo.Arguments = "/c \"" + Config.IISExpressPath + "iisexpress.exe\" " +
                  "/config:" + projectDir + "\\" + ".vs\\config\\applicationhost.config";
+            Console.WriteLine(p.StartInfo.Arguments);
             p.StartInfo.UseShellExecute = false;
             p.Start();
             p.WaitForExit();

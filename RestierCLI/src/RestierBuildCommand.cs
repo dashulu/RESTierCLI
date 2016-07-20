@@ -44,6 +44,13 @@ namespace RestierCLI
                 {
                     pName = projectName.Value();
                 }
+
+                if (pName.Length == 0)
+                {
+                    Console.Write("Can't find a project to build");
+                    command.ShowHelp();
+                    return 0;
+                }
  
                 CmdMSBuild(pName, buildSetting.Value());
                 
