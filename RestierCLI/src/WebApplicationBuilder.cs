@@ -22,11 +22,6 @@ namespace RestierCLI
         // the connection string of the database which gonna create a OData V4 based RESTful services
         private readonly string connectionString;
 
-        // the name of the templete project
-        private const string templeteProjectName = "TempleteProject";
-        // files whose content should be updated in the new web application project
-        private ArrayList filesNeedToBeModified = new ArrayList();
-
         public WebApplicationBuilder(string connection, string projectName, string projectPath)
         {
             this.connectionString = connection;
@@ -164,6 +159,8 @@ namespace RestierCLI
             string filename = projectPath + "\\" + projectName + @"\Web.Release.config";
             CreateFile(filename, FileContent.webReleaseConfigFileContent);
         }
+
+
         /// <summary>
         /// Generate an .NET Web Application Projcet which support a standardized, 
         /// OData V4 based RESTful services on .NET platform from a connection string
@@ -196,50 +193,6 @@ namespace RestierCLI
             return flag;
         }
 
-        // add a connection node in the Web.config file
-        private bool AddConnectionStringInWebConfigFile()
-        {
-            string WebConfigFileName = projectPath + "\\" + projectName + "\\Web.config";
-            if (!File.Exists(WebConfigFileName))
-                return false;
-            XmlDocument doc = new XmlDocument();
-            doc.Load(WebConfigFileName);
-            XmlElement node = (XmlElement)doc.GetElementsByTagName("configuration").Item(0);
-            XmlElement connectionStringsNode = doc.CreateElement("connectionStrings", node.NamespaceURI);
-            XmlElement nodeInConnectionStringNode = doc.CreateElement("add", node.NamespaceURI);
-            nodeInConnectionStringNode.SetAttribute("name", projectName);
-            nodeInConnectionStringNode.SetAttribute("connectionString", this.connectionString);
-            nodeInConnectionStringNode.SetAttribute("providerName", "System.Data.SqlClient");
-            connectionStringsNode.AppendChild(nodeInConnectionStringNode);
-            node.AppendChild(connectionStringsNode);
-            doc.Save(WebConfigFileName);
-            return true;
-        }
-
-
-        // replace the originalWord with the newWord in the file
-        private void ChangeFileContent(string filePath, string originalWord, string newWord)
-        {
-            StreamReader sr = new StreamReader(filePath);
-            string str = sr.ReadToEnd();
-            sr.Close();
-            str = str.Replace(originalWord, newWord);
-            StreamWriter sw = new StreamWriter(filePath, false);
-            sw.WriteLine(str);
-            sw.Close();
-        }
-
-        // Get the file that should be updated in the new web application
-        private void initFilesNeedToBeModified()
-        {
-            filesNeedToBeModified.Add(projectName + ".sln");
-            filesNeedToBeModified.Add(projectName + "\\" + projectName + ".csproj");
-            filesNeedToBeModified.Add(projectName + "\\Global.asax");
-            filesNeedToBeModified.Add(projectName + "\\Global.asax.cs");
-            filesNeedToBeModified.Add(projectName + "\\App_Start\\WebApiConfig.cs");
-            filesNeedToBeModified.Add(".vs\\config\\applicationhost.config");
-        }
-
         // To add files to the cs project, we need to update the .csproj file
         private bool AddModelFileItemInCSPROJFile(IEnumerable<KeyValuePair<string, string>> modelFiles)
         {
@@ -262,21 +215,6 @@ namespace RestierCLI
             return true;
         }
 
-        private bool UpdateApplicationhostConfigFile()
-        {
-            string fileName = projectPath + "\\.vs\\config\\applicationhost.config";
-            if (!File.Exists(fileName))
-            {
-                return false;
-            }
-            XmlDocument doc = new XmlDocument();
-            doc.Load(fileName);
-            XmlElement node = (XmlElement)doc.GetElementsByTagName("virtualDirectory").Item(0);
-            node.SetAttribute("physicalPath", projectPath + "\\" + projectName);
-            doc.Save(fileName);
-            return true;
-        }
-
         // Generate the files in the Modles directory
         private bool AddModleFile(IEnumerable<KeyValuePair<string, string>> modelFiles)
         {
@@ -294,73 +232,6 @@ namespace RestierCLI
             AddModelFileItemInCSPROJFile(modelFiles);
             return true;
         }
-
-
-        // copy all content in directory sPath to dPath
-        private bool _CopyFolder(string sPath, string dPath)
-        {
-            bool flag = true;
-            try
-            {
-                if (!Directory.Exists(sPath))
-                {
-                    return false;
-                }
-
-                if (!Directory.Exists(dPath))
-                {
-                    Directory.CreateDirectory(dPath);
-                }
-
-                // copy files
-                DirectoryInfo sDir = new DirectoryInfo(sPath);
-                FileInfo[] fileArray = sDir.GetFiles();
-                foreach (FileInfo file in fileArray)
-                {
-                    if (file.Name.Equals(templeteProjectName + ".sln"))
-                    {
-                        file.CopyTo(dPath + "\\" + projectName + ".sln", true);
-                    }
-                    else if (file.Name.Equals(templeteProjectName + ".csproj"))
-                    {
-                        file.CopyTo(dPath + "\\" + projectName + ".csproj", true);
-                    }
-                    else if (file.Name.Equals(templeteProjectName + ".csproj.user"))
-                    {
-                        file.CopyTo(dPath + "\\" + projectName + ".csproj.user", true);
-                    }
-                    else
-                    {
-                        file.CopyTo(dPath + "\\" + file.Name, true);
-                    }
-
-                }
-
-                // copy sub directory recursively
-                DirectoryInfo dDir = new DirectoryInfo(dPath);
-                DirectoryInfo[] subDirArray = sDir.GetDirectories();
-                foreach (DirectoryInfo subDir in subDirArray)
-                {
-                    if (subDir.Name.Equals(templeteProjectName))
-                    {
-                        flag = _CopyFolder(subDir.FullName, dPath + "\\" + projectName) ? flag : false;
-                    }
-                    else
-                    {
-                        flag = _CopyFolder(subDir.FullName, dPath + "\\" + subDir.Name) ? flag : false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return false;
-            }
-            return flag;
-        }
-
-
-
     }
     
     
